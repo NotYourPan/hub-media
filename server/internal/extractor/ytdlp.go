@@ -125,11 +125,17 @@ func (e *YtDlpExtractor) Inspect(ctx context.Context, targetURL string) (*models
 
 
 func (e *YtDlpExtractor) inspectTikTok(ctx context.Context, targetURL string) (*models.MediaInfo, error) {
-	apiURL := "https://www.tikwm.com/api/?url=" + url.QueryEscape(targetURL)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL, nil)
+	// Strip query parameters (?is_from_webapp=1&sender_device=pc) so TikWM resolves the canonical video ID
+	cleanURL := strings.Split(targetURL, "?")[0]
+
+	form := url.Values{}
+	form.Set("url", cleanURL)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://www.tikwm.com/api/", strings.NewReader(form.Encode()))
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
 
 	resp, err := e.httpClient.Do(req)
@@ -146,6 +152,7 @@ func (e *YtDlpExtractor) inspectTikTok(ctx context.Context, targetURL string) (*
 	if result.Code != 0 || result.Data.ID == "" {
 		return nil, fmt.Errorf("tiktok extraction failed: %s", result.Msg)
 	}
+
 
 	author := strings.TrimSpace(result.Data.Author.Nickname)
 	if author == "" {
