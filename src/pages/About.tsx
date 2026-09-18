@@ -101,64 +101,45 @@ Go Ingestion Engine (Gin / Fiber)
               </h2>
             </div>
 
-            {/* Lead / Co-Founder — Zidan Mutaqin */}
-            <SpotlightCard
-              className="card-item"
-              spotlightColor="rgba(113, 50, 245, 0.22)"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.75rem',
-                padding: '28px 24px',
-                marginBottom: '1.25rem',
-                borderLeft: '4px solid var(--color-primary)',
-              }}
-            >
-              <img
-                src="/assets/avatars/zidan-mutaqin.webp"
-                alt="Zidan Mutaqin"
-                style={{
-                  width: '90px',
-                  height: '90px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  objectPosition: 'top',
-                  border: '3px solid var(--color-primary)',
-                  boxShadow: '0 0 24px rgba(113,50,245,0.35)',
-                  flexShrink: 0,
-                }}
-                loading="lazy"
-              />
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  display: 'inline-block',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-primary)',
-                  fontFamily: 'var(--font-mono)',
-                  background: 'rgba(113,50,245,0.12)',
-                  padding: '2px 10px',
-                  borderRadius: '99px',
-                  marginBottom: '8px',
-                }}>
-                  Lead · Co-Founder · Engineer
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '6px' }}>
-                  Zidan Mutaqin
-                </h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-text-dim)', lineHeight: 1.6 }}>
-                  Architect of the Hub platform — designing the distributed transcoding pipeline, Go ingestion engine, and overall system vision.
-                </p>
-              </div>
-            </SpotlightCard>
+            {/* 2-column grid: Zidan kiri, Dhevanza kanan */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
 
-            {/* Collaborator — Dhevanza Yugies Daniella */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
+              {/* Zidan Mutaqin — Lead */}
               <SpotlightCard
                 className="card-item"
-                spotlightColor="rgba(87, 65, 216, 0.16)"
+                spotlightColor="rgba(113, 50, 245, 0.16)"
+                style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}
+              >
+                <img
+                  src="/assets/avatars/zidan-mutaqin.webp"
+                  alt="Zidan Mutaqin"
+                  style={{
+                    width: '68px',
+                    height: '68px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    objectPosition: 'top',
+                    border: '2px solid var(--color-primary)',
+                    marginBottom: '14px',
+                    boxShadow: 'var(--shadow-elevation)',
+                  }}
+                  loading="lazy"
+                />
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-text)', marginBottom: '4px' }}>
+                  Zidan Mutaqin
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
+                  Lead · Co-Founder · Engineer
+                </p>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  @zidanmutaqin
+                </span>
+              </SpotlightCard>
+
+              {/* Dhevanza Yugies Daniella — Collaborator */}
+              <SpotlightCard
+                className="card-item"
+                spotlightColor="rgba(113, 50, 245, 0.16)"
                 style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}
               >
                 <img
@@ -170,7 +151,7 @@ Go Ingestion Engine (Gin / Fiber)
                     borderRadius: '50%',
                     objectFit: 'cover',
                     objectPosition: 'top',
-                    border: '2px solid rgba(87,65,216,0.7)',
+                    border: '2px solid var(--color-primary)',
                     marginBottom: '14px',
                     boxShadow: 'var(--shadow-elevation)',
                   }}
@@ -180,14 +161,16 @@ Go Ingestion Engine (Gin / Fiber)
                   Dhevanza Yugies Daniella
                 </h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
-                  Collaborator · UI & Integration
+                  Collaborator · UI &amp; Integration
                 </p>
                 <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
                   @dhevanza
                 </span>
               </SpotlightCard>
+
             </div>
           </section>
+
 
           <section className="section-block">
             <div className="section-header">
