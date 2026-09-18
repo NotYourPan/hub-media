@@ -83,10 +83,17 @@ func (s *Server) HandleDebug(w http.ResponseWriter, r *http.Request) {
 		igResult = igResult[:500]
 	}
 
+	var ytdlpVersion string
+	if ytdlpErr == nil {
+		vOut, _ := exec.Command("yt-dlp", "--version").Output()
+		ytdlpVersion = strings.TrimSpace(string(vOut))
+	}
+
 	writeJSON(w, http.StatusOK, map[string]any{
 		"ytdlp": map[string]any{
 			"installed": ytdlpErr == nil,
 			"path":      ytdlpPath,
+			"version":   ytdlpVersion,
 			"error":     fmt.Sprint(ytdlpErr),
 		},
 		"ffmpeg": map[string]any{
