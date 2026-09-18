@@ -1,0 +1,45 @@
+name: Deploy Frontend to Netlify
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - '*.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'tsconfig*.json'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build Vite MPA & Deploy to Netlify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Production MPA Bundle
+        run: npm run build
+
+      - name: Deploy to Netlify via Netlify CLI
+        run: |
+          npx --yes netlify-cli deploy \
+            --dir=dist \
+            --prod \
+            --auth="${{ secrets.NETLIFY_AUTH_TOKEN || secrets.NETLIFY_PAT }}" \
+            --site="${{ secrets.NETLIFY_SITE_ID || secrets.NETLIFY_PROJECT_ID }}"
