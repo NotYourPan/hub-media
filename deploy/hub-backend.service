@@ -1,0 +1,23 @@
+[Unit]
+Description=Hub Media Downloader Go Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/hub-backend
+ExecStart=/var/www/hub-backend/hub-server
+Restart=always
+RestartSec=5s
+
+# Custom port and environment settings
+Environment=PORT=9443
+Environment=GIN_MODE=release
+EnvironmentFile=-/var/www/hub-backend/.env
+
+# Security and resource restrictions
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+

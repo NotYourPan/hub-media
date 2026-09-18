@@ -1,0 +1,61 @@
+name: Deploy Backend to VPS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+      - 'deploy/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build Go 1.22 Binary & Deploy via Systemd
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.22
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
+
+      - name: Compile Linux AMD64 Binary
+        run: |
+          cd server
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o hub-server .
+
+      - name: Copy Binary and Systemd Config to VPS via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: 'server/hub-server,deploy/hub-backend.service'
+          target: '/var/www/hub-backend'
+          strip_components: 1
+
+      - name: Reload & Restart Systemd Service via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            mkdir -p /var/www/hub-backend/tmp_storage
+            chmod +x /var/www/hub-backend/hub-server
+            cp /var/www/hub-backend/hub-backend.service /etc/systemd/system/hub-backend.service
+            systemctl daemon-reload
+            systemctl enable hub-backend
+            systemctl restart hub-backend
+            sleep 2
+            systemctl status hub-backend --no-pager
