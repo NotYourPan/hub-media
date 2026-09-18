@@ -34,7 +34,8 @@ export interface MediaDownloadResponse {
 export async function fetchMediaInfo(targetUrl: string): Promise<MediaInfo> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    // Allow up to 20s for real-time video stream inspection across remote platform CDN/extractors
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     const res = await fetch(`${API_BASE_URL}/info`, {
       method: 'POST',
@@ -43,6 +44,7 @@ export async function fetchMediaInfo(targetUrl: string): Promise<MediaInfo> {
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
+
 
     if (res.ok) {
       const liveData: MediaInfo = await res.json();

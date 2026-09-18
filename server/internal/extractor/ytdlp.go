@@ -73,13 +73,29 @@ func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string,
 		return nil, fmt.Errorf("yt-dlp binary not found in PATH")
 	}
 
-	cmd := exec.CommandContext(ctx, "yt-dlp", "--dump-single-json", "--no-warnings", "--no-playlist", targetURL)
+	// Set a 12-second execution timeout so it never hangs backend or triggers browser abort
+	inspectCtx, cancel := context.WithTimeout(ctx, 12*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(
+		inspectCtx,
+		"yt-dlp",
+		"--dump-single-json",
+		"--skip-download",
+		"--no-playlist",
+		"--no-warnings",
+		"--no-check-certificates",
+		"--force-ipv4",
+		"--socket-timeout", "6",
+		targetURL,
+	)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
 	if err := cmd.Run(); err != nil {
 		return nil, err
 	}
+
 
 	var meta YtDlpJSONMetadata
 	if err := json.Unmarshal(out.Bytes(), &meta); err != nil {
