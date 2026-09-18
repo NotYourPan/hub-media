@@ -449,9 +449,7 @@ func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string,
 	inspectCtx, cancel := context.WithTimeout(ctx, 12*time.Second)
 	defer cancel()
 
-	cmd := exec.CommandContext(
-		inspectCtx,
-		"yt-dlp",
+	cmdArgs := []string{
 		"--dump-single-json",
 		"--skip-download",
 		"--no-playlist",
@@ -459,8 +457,16 @@ func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string,
 		"--no-check-certificates",
 		"--force-ipv4",
 		"--socket-timeout", "6",
-		targetURL,
-	)
+		"--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+	}
+
+	cookiePath := "/var/www/hub-backend/cookies.txt"
+	if _, err := os.Stat(cookiePath); err == nil {
+		cmdArgs = append(cmdArgs, "--cookies", cookiePath)
+	}
+	cmdArgs = append(cmdArgs, targetURL)
+
+	cmd := exec.CommandContext(inspectCtx, "yt-dlp", cmdArgs...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
@@ -468,11 +474,11 @@ func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string,
 		return nil, err
 	}
 
-
 	var meta YtDlpJSONMetadata
 	if err := json.Unmarshal(out.Bytes(), &meta); err != nil {
 		return nil, err
 	}
+
 
 	author := meta.Uploader
 	if author == "" {
@@ -622,13 +628,18 @@ func (e *YtDlpExtractor) Download(ctx context.Context, job *models.DownloadJob, 
 			"--no-playlist",
 			"--force-ipv4",
 			"--no-warnings",
-			job.URL,
+			"--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+		}
+		cookiePath := "/var/www/hub-backend/cookies.txt"
+		if _, err := os.Stat(cookiePath); err == nil {
+			cmdArgs = append(cmdArgs, "--cookies", cookiePath)
 		}
 		if job.Format == models.FormatAudio {
 			cmdArgs = append(cmdArgs, "-x", "--audio-format", "mp3")
 		} else {
 			cmdArgs = append(cmdArgs, "-f", "bestvideo+bestaudio/best")
 		}
+		cmdArgs = append(cmdArgs, job.URL)
 
 		cmd := exec.CommandContext(ctx, "yt-dlp", cmdArgs...)
 		if err := cmd.Run(); err == nil {
