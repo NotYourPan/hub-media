@@ -456,8 +456,7 @@ func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string,
 		"--no-warnings",
 		"--no-check-certificates",
 		"--force-ipv4",
-		"--socket-timeout", "6",
-		"--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+		"--socket-timeout", "10",
 	}
 
 	cookiePath := "/var/www/hub-backend/cookies.txt"
@@ -621,14 +620,24 @@ func (e *YtDlpExtractor) Download(ctx context.Context, job *models.DownloadJob, 
 		}
 	}
 
-	// 2. Check if yt-dlp is available for real binary download
+	// 2. Direct high-speed download for Twitter / X via clean CDN streams
+	if platform == models.PlatformTwitter {
+		if info, err := e.inspectTwitterFx(ctx, job.URL); err == nil && info.VideoPreviewURL != "" {
+			if err := e.downloadURLToFile(ctx, info.VideoPreviewURL, filePath); err == nil {
+				if stat, err := os.Stat(filePath); err == nil && stat.Size() > 1024 {
+					return filePath, stat.Size(), nil
+				}
+			}
+		}
+	}
+
+	// 3. Check if yt-dlp is available for real binary download
 	if _, err := exec.LookPath("yt-dlp"); err == nil && job.Format != models.FormatHTML {
 		cmdArgs := []string{
 			"-o", filePath,
 			"--no-playlist",
 			"--force-ipv4",
 			"--no-warnings",
-			"--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
 		}
 		cookiePath := "/var/www/hub-backend/cookies.txt"
 		if _, err := os.Stat(cookiePath); err == nil {
