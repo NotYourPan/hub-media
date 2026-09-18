@@ -353,7 +353,7 @@ func (e *YtDlpExtractor) inspectInstagramFallback(targetURL string) (*models.Med
 	}, nil
 }
 
-
+func (e *YtDlpExtractor) inspectWithYtDlp(ctx context.Context, targetURL string, platform models.MediaPlatform) (*models.MediaInfo, error) {
 	_, err := exec.LookPath("yt-dlp")
 	if err != nil {
 		return nil, fmt.Errorf("yt-dlp binary not found in PATH")
