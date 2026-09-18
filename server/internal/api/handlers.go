@@ -3,8 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"os/exec"
 	"strings"
 
 	"hub-server/internal/extractor"
@@ -33,6 +36,57 @@ func (s *Server) HandleHealth(w http.ResponseWriter, r *http.Request) {
 		"service": "Hub Media Ingestion Engine",
 	})
 }
+
+func (s *Server) HandleDebug(w http.ResponseWriter, r *http.Request) {
+	ytdlpPath, ytdlpErr := exec.LookPath("yt-dlp")
+	ffmpegPath, ffmpegErr := exec.LookPath("ffmpeg")
+
+	// Test TikWM connection from VPS
+	tikwmStatus := "untested"
+	var tikwmSnippet string
+	form := url.Values{}
+	form.Set("url", "https://www.tiktok.com/@multivers_ngawursrill/video/7685997920440585479")
+	resp, err := http.Post("https://www.tikwm.com/api/", "application/x-www-form-urlencoded", strings.NewReader(form.Encode()))
+	if err != nil {
+		tikwmStatus = fmt.Sprintf("error: %v", err)
+	} else {
+		defer resp.Body.Close()
+		bytes, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
+		tikwmStatus = fmt.Sprintf("HTTP %d", resp.StatusCode)
+		tikwmSnippet = string(bytes)
+	}
+
+	// Test YouTube oEmbed from VPS
+	ytStatus := "untested"
+	ytResp, ytErr := http.Get("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ&format=json")
+	if ytErr != nil {
+		ytStatus = fmt.Sprintf("error: %v", ytErr)
+	} else {
+		defer ytResp.Body.Close()
+		ytStatus = fmt.Sprintf("HTTP %d", ytResp.StatusCode)
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{
+		"ytdlp": map[string]any{
+			"installed": ytdlpErr == nil,
+			"path":      ytdlpPath,
+			"error":     fmt.Sprint(ytdlpErr),
+		},
+		"ffmpeg": map[string]any{
+			"installed": ffmpegErr == nil,
+			"path":      ffmpegPath,
+			"error":     fmt.Sprint(ffmpegErr),
+		},
+		"tikwm": map[string]any{
+			"status":  tikwmStatus,
+			"snippet": tikwmSnippet,
+		},
+		"youtube_oembed": map[string]any{
+			"status": ytStatus,
+		},
+	})
+}
+
 
 // HandleMediaInfo inspects URL metadata
 func (s *Server) HandleMediaInfo(w http.ResponseWriter, r *http.Request) {
