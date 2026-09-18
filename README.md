@@ -215,7 +215,11 @@ The output directory `dist/` will contain:
 - Bundled CSS and JavaScript assets
 
 ---
+## Contributor
+Contributor on this repository:
+- [notyourpan](https;//github.com/notyourpan)
 
+---
 ## License
 
 Distributed under the [MIT License](LICENSE).
