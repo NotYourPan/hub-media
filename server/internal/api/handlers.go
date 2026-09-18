@@ -1,14 +1,15 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
+
 
 	"hub-server/internal/extractor"
 	"hub-server/internal/models"
@@ -41,29 +42,45 @@ func (s *Server) HandleDebug(w http.ResponseWriter, r *http.Request) {
 	ytdlpPath, ytdlpErr := exec.LookPath("yt-dlp")
 	ffmpegPath, ffmpegErr := exec.LookPath("ffmpeg")
 
-	// Test TikWM connection from VPS
-	tikwmStatus := "untested"
-	var tikwmSnippet string
-	form := url.Values{}
-	form.Set("url", "https://www.tiktok.com/@multivers_ngawursrill/video/7685997920440585479")
-	resp, err := http.Post("https://www.tikwm.com/api/", "application/x-www-form-urlencoded", strings.NewReader(form.Encode()))
-	if err != nil {
-		tikwmStatus = fmt.Sprintf("error: %v", err)
-	} else {
-		defer resp.Body.Close()
-		bytes, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
-		tikwmStatus = fmt.Sprintf("HTTP %d", resp.StatusCode)
-		tikwmSnippet = string(bytes)
+	// Check cookies.txt file
+	cookiePath := "/var/www/hub-backend/cookies.txt"
+	cookieStat, cookieErr := os.Stat(cookiePath)
+	cookieInfo := map[string]any{
+		"exists": cookieErr == nil,
+		"path":   cookiePath,
+		"size":   int64(0),
+	}
+	if cookieErr == nil {
+		cookieInfo["size"] = cookieStat.Size()
 	}
 
-	// Test YouTube oEmbed from VPS
-	ytStatus := "untested"
-	ytResp, ytErr := http.Get("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ&format=json")
-	if ytErr != nil {
-		ytStatus = fmt.Sprintf("error: %v", ytErr)
-	} else {
-		defer ytResp.Body.Close()
-		ytStatus = fmt.Sprintf("HTTP %d", ytResp.StatusCode)
+	// Test Instagram with yt-dlp
+	igURL := r.URL.Query().Get("ig")
+	if igURL == "" {
+		igURL = "https://www.instagram.com/reel/C8x71a9Lz5k/"
+	}
+	cmdArgs := []string{
+		"--dump-single-json",
+		"--skip-download",
+		"--no-playlist",
+		"--no-warnings",
+		"--no-check-certificates",
+		"--force-ipv4",
+		"--socket-timeout", "8",
+	}
+	if cookieErr == nil {
+		cmdArgs = append(cmdArgs, "--cookies", cookiePath)
+	}
+	cmdArgs = append(cmdArgs, igURL)
+
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
+	igCmd := exec.CommandContext(ctx, "yt-dlp", cmdArgs...)
+	igOut, igRunErr := igCmd.CombinedOutput()
+	igResult := string(igOut)
+	if len(igResult) > 500 {
+		igResult = igResult[:500]
 	}
 
 	writeJSON(w, http.StatusOK, map[string]any{
@@ -77,15 +94,14 @@ func (s *Server) HandleDebug(w http.ResponseWriter, r *http.Request) {
 			"path":      ffmpegPath,
 			"error":     fmt.Sprint(ffmpegErr),
 		},
-		"tikwm": map[string]any{
-			"status":  tikwmStatus,
-			"snippet": tikwmSnippet,
-		},
-		"youtube_oembed": map[string]any{
-			"status": ytStatus,
+		"cookies": cookieInfo,
+		"instagram_test": map[string]any{
+			"error":  fmt.Sprint(igRunErr),
+			"output": igResult,
 		},
 	})
 }
+
 
 
 // HandleMediaInfo inspects URL metadata
