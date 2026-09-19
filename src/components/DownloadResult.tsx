@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MediaInfo, MediaFormat, MediaQuality } from '../types/media';
 import { PlatformBadge } from './PlatformBadge';
 import { useLanguage } from '../lib/i18n';
+import { requestMediaDownload, pollMediaDownloadStatus } from '../lib/api';
 
 interface DownloadResultProps {
   media: MediaInfo;
@@ -15,14 +16,85 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
   const [selectedQuality, setSelectedQuality] = useState<MediaQuality>(
     media.availableQualities[0] || '1080p'
   );
-  const [downloadState, setDownloadState] = useState<'idle' | 'preparing' | 'completed'>('idle');
+  const [downloadState, setDownloadState] = useState<'idle' | 'preparing' | 'completed' | 'failed'>('idle');
+  const [progressText, setProgressText] = useState<string>('');
+  const [downloadUrl, setDownloadUrl] = useState<string>('');
+  const [fileSizeText, setFileSizeText] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [isPlayingPreview, setIsPlayingPreview] = useState<boolean>(false);
 
-  const handleDownload = () => {
+  const triggerBrowserDownload = (url: string, filename: string) => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleDownload = async () => {
     setDownloadState('preparing');
-    setTimeout(() => {
-      setDownloadState('completed');
-    }, 1200);
+    setErrorMessage('');
+    setProgressText(`${t.downloader.preparingBtn} (10%)`);
+
+    const targetExt = selectedFormat === 'html' ? 'html' : selectedFormat === 'audio' ? 'mp3' : 'mp4';
+    const downloadFilename = `${media.id}.${targetExt}`;
+
+    try {
+      // 1. Submit download job to Go backend
+      const submitRes = await requestMediaDownload(media.url, selectedFormat, selectedQuality);
+      const jobId = submitRes.jobId;
+
+      // 2. Poll job status
+      let attempts = 0;
+      const maxAttempts = 60; // 60 seconds max
+      const interval = 1000;
+
+      while (attempts < maxAttempts) {
+        attempts++;
+        await new Promise((resolve) => setTimeout(resolve, interval));
+
+        try {
+          const status = await pollMediaDownloadStatus(jobId);
+
+          if (status.status === 'ready' && status.downloadUrl) {
+            setDownloadUrl(status.downloadUrl);
+            if (status.fileSizeBytes) {
+              const mb = (status.fileSizeBytes / (1024 * 1024)).toFixed(1);
+              setFileSizeText(`${mb} MB`);
+            }
+            setDownloadState('completed');
+            triggerBrowserDownload(status.downloadUrl, downloadFilename);
+            return;
+          }
+
+          if (status.status === 'failed') {
+            throw new Error(status.error || t.downloader.downloadFailed);
+          }
+
+          const currentPct = status.progressPercent || Math.min(95, attempts * 5);
+          setProgressText(`${t.downloader.preparingBtn} (${currentPct}%)`);
+        } catch (pollErr: any) {
+          if (attempts >= maxAttempts) {
+            throw pollErr;
+          }
+        }
+      }
+      throw new Error('Download processing timed out');
+    } catch (err: any) {
+      // Fallback: If backend transcoder fails or times out, but direct videoPreviewUrl exists for video
+      if (selectedFormat === 'video' && media.videoPreviewUrl) {
+        setDownloadUrl(media.videoPreviewUrl);
+        setDownloadState('completed');
+        triggerBrowserDownload(media.videoPreviewUrl, downloadFilename);
+        return;
+      }
+
+      setDownloadState('failed');
+      setErrorMessage(err?.message || t.downloader.downloadFailed);
+    }
   };
 
   const getFormatLabel = (format: MediaFormat) => {
@@ -230,7 +302,7 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
             {downloadState === 'preparing' ? (
               <>
                 <span className="spinner" />
-                <span>{t.downloader.simulatingBtn}</span>
+                <span>{progressText}</span>
               </>
             ) : (
               <span>{t.downloader.downloadBtn} {selectedFormat.toUpperCase()}</span>
@@ -240,11 +312,35 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
       </div>
 
       {downloadState === 'completed' && (
-        <div className="status-box status-success">
+        <div className="status-box status-success" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <div>
-            <strong>{t.downloader.simulatedNotice}</strong> {t.downloader.readyAs}{' '}
-            <code>{media.id}.{selectedFormat === 'html' ? 'html' : selectedFormat === 'audio' ? 'mp3' : 'mp4'}</code>.
-            ({t.downloader.prototypeNote})
+            <strong>{t.downloader.downloadReady}</strong>{' '}
+            <code>{media.id}.{selectedFormat === 'html' ? 'html' : selectedFormat === 'audio' ? 'mp3' : 'mp4'}</code>
+            {fileSizeText && <span> ({fileSizeText})</span>}
+          </div>
+          <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.9 }}>
+            {t.downloader.downloadStarting}
+          </p>
+          {downloadUrl && (
+            <div style={{ marginTop: '0.25rem' }}>
+              <a
+                href={downloadUrl}
+                download={`${media.id}.${selectedFormat === 'html' ? 'html' : selectedFormat === 'audio' ? 'mp3' : 'mp4'}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#6ee7b7', textDecoration: 'underline', fontSize: '0.875rem', fontWeight: 600 }}
+              >
+                {t.downloader.clickToDownload} →
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {downloadState === 'failed' && (
+        <div className="status-box" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: '#ef4444', color: '#fca5a5' }}>
+          <div>
+            <strong>{t.downloader.downloadFailed}</strong> {errorMessage}
           </div>
         </div>
       )}

@@ -20,12 +20,39 @@ export interface MediaDownloadRequest {
   quality: MediaQuality;
 }
 
-export interface MediaDownloadResponse {
+export interface MediaJobStatus {
   jobId: string;
   status: 'queued' | 'processing' | 'ready' | 'failed';
-  estimatedSeconds?: number;
+  progressPercent: number;
   downloadUrl?: string;
+  fileSizeBytes?: number;
+  expiresInSeconds?: number;
   error?: string;
+}
+
+export async function requestMediaDownload(
+  targetUrl: string,
+  format: MediaFormat,
+  quality: MediaQuality
+): Promise<{ jobId: string; status: string; estimatedSeconds?: number }> {
+  const res = await fetch(`${API_BASE_URL}/download`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: targetUrl, format, quality }),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || `Download request failed (${res.status})`);
+  }
+  return await res.json();
+}
+
+export async function pollMediaDownloadStatus(jobId: string): Promise<MediaJobStatus> {
+  const res = await fetch(`${API_BASE_URL}/download/${jobId}`);
+  if (!res.ok) {
+    throw new Error(`Failed to check job status (${res.status})`);
+  }
+  return await res.json();
 }
 
 /**

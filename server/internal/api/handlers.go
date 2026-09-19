@@ -30,6 +30,24 @@ func NewServer(ext extractor.Extractor, pool *queue.WorkerPool, baseURL string) 
 	}
 }
 
+func (s *Server) getBaseURL(r *http.Request) string {
+	proto := "https"
+	if r.TLS == nil && r.Header.Get("X-Forwarded-Proto") != "https" && strings.HasPrefix(s.baseURL, "http://") && strings.Contains(s.baseURL, "localhost") {
+		proto = "http"
+	}
+	host := r.Host
+	if xfHost := r.Header.Get("X-Forwarded-Host"); xfHost != "" {
+		host = xfHost
+	}
+	if host != "" {
+		return fmt.Sprintf("%s://%s", proto, host)
+	}
+	if s.baseURL != "" && !strings.Contains(s.baseURL, "localhost") {
+		return s.baseURL
+	}
+	return "https://api.zidanmutaqin.cloud"
+}
+
 func (s *Server) HandleHealth(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"status":  "ok",
@@ -185,7 +203,7 @@ func (s *Server) HandleJobStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if job.Status == models.StatusReady {
-		resp.DownloadURL = fmt.Sprintf("%s/v1/media/stream/%s", s.baseURL, job.ID)
+		resp.DownloadURL = fmt.Sprintf("%s/v1/media/stream/%s", s.getBaseURL(r), job.ID)
 		resp.FileSizeBytes = job.FileSize
 		resp.ExpiresInSeconds = 3600
 	}
