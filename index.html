@@ -4,18 +4,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hub: Universal Media Downloader</title>
-  <meta name="description" content="High-performance media downloader frontend prototype for multiple platforms." />
+  <title>Hub: Universal Media Downloader — TikTok, YouTube, IG, FB & X</title>
+  <meta name="description" content="Fast, ad-free universal media downloader by Zidan Mutaqin. Download video & audio from TikTok (no watermark), YouTube, Instagram Reels, Facebook, and Twitter/X with zero ads." />
+  <meta name="keywords" content="media downloader, tiktok downloader without watermark, youtube mp4 mp3, instagram reel downloader, facebook video downloader, twitter x video, open source downloader, zidan mutaqin" />
+  <meta name="author" content="Zidan Mutaqin" />
+  <meta name="creator" content="Zidan Mutaqin" />
+  <meta name="publisher" content="Zidan Mutaqin" />
+  <meta name="theme-color" content="#090d16" />
+  <link rel="canonical" href="https://hub.zidanmutaqin.cloud/" />
+  <link rel="author" href="https://zidanmutaqin.cloud" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Icons -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <meta property="og:title" content="Hub: Universal Media Downloader" />
-  <meta property="og:description" content="High-performance, privacy-first media stream and download platform." />
-  <meta property="og:image" content="/assets/og-image.webp" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:site_name" content="Hub Media Downloader" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hub.zidanmutaqin.cloud/" />
+  <meta property="og:title" content="Hub: Universal Media Downloader — TikTok, YouTube, IG, FB & X" />
+  <meta property="og:description" content="Download high-resolution video and audio from TikTok, YouTube, Instagram, Facebook, and Twitter/X without ads or watermarks." />
+  <meta property="og:image" content="https://hub.zidanmutaqin.cloud/assets/og-image.webp" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="/assets/og-image.webp" />
+  <meta name="twitter:url" content="https://hub.zidanmutaqin.cloud/" />
+  <meta name="twitter:title" content="Hub: Universal Media Downloader" />
+  <meta name="twitter:description" content="Download high-resolution video and audio from TikTok, YouTube, Instagram, Facebook, and Twitter/X without ads or watermarks." />
+  <meta name="twitter:image" content="https://hub.zidanmutaqin.cloud/assets/og-image.webp" />
+  <meta name="twitter:creator" content="@zidanmutaqin" />
+
+  <!-- Structured Data: WebApplication, WebSite & FAQPage tied to https://zidanmutaqin.cloud -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://hub.zidanmutaqin.cloud/#webapp",
+        "name": "Hub Media Downloader",
+        "url": "https://hub.zidanmutaqin.cloud/",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "@id": "https://zidanmutaqin.cloud/#person",
+          "name": "Zidan Mutaqin",
+          "url": "https://zidanmutaqin.cloud"
+        },
+        "creator": {
+          "@type": "Person",
+          "@id": "https://zidanmutaqin.cloud/#person"
+        },
+        "publisher": {
+          "@type": "Person",
+          "@id": "https://zidanmutaqin.cloud/#person"
+        },
+        "description": "High-performance, privacy-first media downloader for TikTok, YouTube, Instagram Reels, Facebook Watch, and Twitter/X.",
+        "browserRequirements": "Requires JavaScript. Requires HTML5."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://hub.zidanmutaqin.cloud/#website",
+        "url": "https://hub.zidanmutaqin.cloud/",
+        "name": "Hub Media Downloader",
+        "publisher": {
+          "@type": "Person",
+          "@id": "https://zidanmutaqin.cloud/#person"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://hub.zidanmutaqin.cloud/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is Hub Media Downloader free with zero ads?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, Hub is 100% free and open source under the MIT License, built without deceptive popups or trackers by Zidan Mutaqin."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which media platforms can Hub download from?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hub supports downloading video and audio from TikTok (no watermark), YouTube (1080p, 720p, MP3), Instagram Reels, Facebook Watch, and Twitter/X."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Hub log or store user downloads?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All media streams are delivered ephemerally and automatically purged within 60 minutes after conversion."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
