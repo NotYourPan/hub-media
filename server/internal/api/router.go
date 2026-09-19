@@ -8,9 +8,8 @@ import (
 func (s *Server) SetupRouter() http.Handler {
 	mux := http.NewServeMux()
 
-	// Health check & Diagnostic
+	// Health check
 	mux.HandleFunc("GET /v1/health", s.HandleHealth)
-	mux.HandleFunc("GET /v1/debug", s.HandleDebug)
 
 	// Media endpoints
 	mux.HandleFunc("POST /v1/media/info", s.HandleMediaInfo)

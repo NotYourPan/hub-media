@@ -10,7 +10,13 @@ export const Footer: React.FC = () => {
         <div className="footer-grid">
           <div>
             <div className="brand-logo" style={{ marginBottom: '0.75rem' }}>
-              <span className="brand-icon">H</span>
+              <img
+                src="/assets/logo.webp"
+                alt="Hub Logo"
+                className="brand-icon-img"
+                width="28"
+                height="28"
+              />
               <span>Hub</span>
             </div>
             <p style={{ fontSize: '0.88rem', maxWidth: '340px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>

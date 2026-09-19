@@ -17,7 +17,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentEntry, badgeLabel }) => {
       <div className="container site-navbar-inner">
         <div className="brand-wrapper">
           <a href="/" className="brand-logo" aria-label="Hub Home">
-            <span className="brand-icon">H</span>
+            <img
+              src="/assets/logo.webp"
+              alt="Hub Logo"
+              className="brand-icon-img"
+              width="32"
+              height="32"
+            />
             <span>Hub</span>
           </a>
           <span className="brand-badge">{badgeLabel || t.nav.openSource}</span>

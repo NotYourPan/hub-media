@@ -1,14 +1,11 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
-	"time"
 
 
 	"hub-server/internal/extractor"
@@ -49,85 +46,10 @@ func (s *Server) getBaseURL(r *http.Request) string {
 }
 
 func (s *Server) HandleHealth(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]any{
-		"status":  "ok",
-		"version": "go1.22",
-		"service": "Hub Media Ingestion Engine",
+	writeJSON(w, http.StatusOK, map[string]string{
+		"status": "ok",
 	})
 }
-
-func (s *Server) HandleDebug(w http.ResponseWriter, r *http.Request) {
-	ytdlpPath, ytdlpErr := exec.LookPath("yt-dlp")
-	ffmpegPath, ffmpegErr := exec.LookPath("ffmpeg")
-
-	// Check cookies.txt file
-	cookiePath := "/var/www/hub-backend/cookies.txt"
-	cookieStat, cookieErr := os.Stat(cookiePath)
-	cookieInfo := map[string]any{
-		"exists": cookieErr == nil,
-		"path":   cookiePath,
-		"size":   int64(0),
-	}
-	if cookieErr == nil {
-		cookieInfo["size"] = cookieStat.Size()
-	}
-
-	// Test Instagram with yt-dlp
-	igURL := r.URL.Query().Get("ig")
-	if igURL == "" {
-		igURL = "https://www.instagram.com/reel/C8x71a9Lz5k/"
-	}
-	cmdArgs := []string{
-		"--dump-single-json",
-		"--skip-download",
-		"--no-playlist",
-		"--no-warnings",
-		"--no-check-certificates",
-		"--force-ipv4",
-		"--socket-timeout", "8",
-	}
-	if cookieErr == nil {
-		cmdArgs = append(cmdArgs, "--cookies", cookiePath)
-	}
-	cmdArgs = append(cmdArgs, igURL)
-
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
-	defer cancel()
-
-	igCmd := exec.CommandContext(ctx, "yt-dlp", cmdArgs...)
-	igOut, igRunErr := igCmd.CombinedOutput()
-	igResult := string(igOut)
-	if len(igResult) > 500 {
-		igResult = igResult[:500]
-	}
-
-	var ytdlpVersion string
-	if ytdlpErr == nil {
-		vOut, _ := exec.Command("yt-dlp", "--version").Output()
-		ytdlpVersion = strings.TrimSpace(string(vOut))
-	}
-
-	writeJSON(w, http.StatusOK, map[string]any{
-		"ytdlp": map[string]any{
-			"installed": ytdlpErr == nil,
-			"path":      ytdlpPath,
-			"version":   ytdlpVersion,
-			"error":     fmt.Sprint(ytdlpErr),
-		},
-		"ffmpeg": map[string]any{
-			"installed": ffmpegErr == nil,
-			"path":      ffmpegPath,
-			"error":     fmt.Sprint(ffmpegErr),
-		},
-		"cookies": cookieInfo,
-		"instagram_test": map[string]any{
-			"error":  fmt.Sprint(igRunErr),
-			"output": igResult,
-		},
-	})
-}
-
-
 
 // HandleMediaInfo inspects URL metadata
 func (s *Server) HandleMediaInfo(w http.ResponseWriter, r *http.Request) {
@@ -138,13 +60,13 @@ func (s *Server) HandleMediaInfo(w http.ResponseWriter, r *http.Request) {
 
 	var req models.InfoRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || strings.TrimSpace(req.URL) == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid JSON payload or missing 'url' field"})
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request payload"})
 		return
 	}
 
 	info, err := s.extractor.Inspect(r.Context(), req.URL)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"error": "Unable to process media stream from the provided URL"})
 		return
 	}
 
@@ -177,7 +99,6 @@ func (s *Server) HandleMediaDownload(w http.ResponseWriter, r *http.Request) {
 		JobID:            job.ID,
 		Status:           job.Status,
 		EstimatedSeconds: 2.5,
-		Engine:           "Go 1.22 + yt-dlp Transcoder Pool",
 	})
 }
 
@@ -195,11 +116,16 @@ func (s *Server) HandleJobStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	errStr := ""
+	if job.Status == models.StatusFailed {
+		errStr = "Failed to process media stream"
+	}
+
 	resp := models.JobStatusResponse{
 		JobID:           job.ID,
 		Status:          job.Status,
 		ProgressPercent: job.Progress,
-		Error:           job.Error,
+		Error:           errStr,
 	}
 
 	if job.Status == models.StatusReady {
