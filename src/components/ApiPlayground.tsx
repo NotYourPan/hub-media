@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { fetchMediaInfo } from '../lib/api';
+import { useLanguage } from '../lib/i18n';
 
 type LanguageType = 'curl' | 'node' | 'python' | 'go';
 type EndpointType = 'info' | 'download' | 'status';
 
 export const ApiPlayground: React.FC = () => {
+  const { t } = useLanguage();
   const [endpoint, setEndpoint] = useState<EndpointType>('info');
   const [language, setLanguage] = useState<LanguageType>('curl');
   const [targetUrl, setTargetUrl] = useState<string>('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
@@ -338,8 +340,8 @@ round-trip min/avg/max = 19.8/21.1/22.1 ms`,
   return (
     <section className="section-block" style={{ marginTop: '2.5rem' }}>
       <div className="section-header">
-        <div className="section-tag">Interactive Terminal & Runner</div>
-        <h2 className="section-title">Public API Console</h2>
+        <div className="section-tag">{t.docs.terminalTag}</div>
+        <h2 className="section-title">{t.docs.terminalTitle}</h2>
       </div>
 
       {/* Mac Terminal Window Container */}
@@ -516,7 +518,7 @@ round-trip min/avg/max = 19.8/21.1/22.1 ms`,
               style={{ fontSize: '0.75rem', padding: '5px 10px' }}
               title="Clear terminal log"
             >
-              clear
+              {t.docs.terminalClear}
             </button>
             <button
               type="button"
@@ -525,7 +527,7 @@ round-trip min/avg/max = 19.8/21.1/22.1 ms`,
               style={{ fontSize: '0.75rem', padding: '5px 10px' }}
               title="Copy snippet to clipboard"
             >
-              {copied ? 'copied!' : 'pbcopy'}
+              {copied ? t.docs.terminalCopied : t.docs.terminalCopy}
             </button>
             <button
               type="button"
@@ -540,7 +542,7 @@ round-trip min/avg/max = 19.8/21.1/22.1 ms`,
                 fontWeight: 700,
               }}
             >
-              {isLoading ? 'Executing...' : 'Run ⏎'}
+              {isLoading ? t.docs.terminalExecuting : t.docs.terminalRun}
             </button>
           </div>
         </div>
@@ -747,7 +749,7 @@ round-trip min/avg/max = 19.8/21.1/22.1 ms`,
                   margin: 0,
                   caretColor: '#38bdf8',
                 }}
-                placeholder="type command (e.g. curl ..., help, ping, clear) and press Enter"
+                placeholder={t.docs.terminalPlaceholder}
               />
             </div>
           </div>

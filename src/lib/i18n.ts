@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 
 export type Language = 'en' | 'id';
 
@@ -12,6 +12,9 @@ export const translations = {
       openSource: 'Open Source',
       themeLight: 'Light',
       themeDark: 'Dark',
+      closeMenu: 'Close menu',
+      openMenu: 'Open menu',
+      switchLang: 'Switch language',
     },
 
     // Home Page
@@ -23,6 +26,10 @@ export const translations = {
       analyzing: 'Connecting to media metadata resolver and inspecting stream sources...',
       errorValidUrl: 'Please enter a valid URL containing a recognizable domain name.',
       errorParse: 'Failed to parse media metadata from the provided URL.',
+      samplesTag: 'Verified Media Sources',
+      samplesTitle: 'Sample Media Extraction',
+      samplesDesc: 'Click any sample to test real-time metadata resolution and video stream inspection.',
+      inspectStream: 'Inspect Stream',
       suitesHeadingTag: 'Modular Architecture',
       suitesHeadingTitle: 'Dedicated Application Endpoints',
       suite1Tag: 'SUITE 01 / CORE',
@@ -69,6 +76,21 @@ export const translations = {
       clickToDownload: 'Click here if download does not start automatically',
       downloadFailed: 'Failed to process download. Please try again.',
       fileSize: 'File Size:',
+      targetLabel: 'Target: Distributed Stream',
+      watchPreview: 'Watch Stream Preview',
+      showThumbnail: 'Show Thumbnail',
+      playPreview: 'Watch sample video preview',
+      formatVideo: 'Video (MP4)',
+      formatAudio: 'Audio (MP3)',
+      formatHtml: 'Webpage Source (HTML)',
+      qualityOriginal: 'Original Source',
+      quality1080p: '1080p Full HD',
+      quality720p: '720p HD',
+      quality480p: '480p Standard',
+      quality320k: '320 kbps High Quality',
+      quality128k: '128 kbps Standard',
+      qualityRawHtml: 'Raw HTML Markup',
+      qualityCleanHtml: 'Sanitized Article DOM',
     },
 
     // About Page
@@ -90,6 +112,10 @@ export const translations = {
       archDescTitle: 'Distributed Transcoding Pipeline',
       archDescText: 'The Hub platform decouples the static client interface from backend processing. Heavyweight audio/video demuxing and format conversion are orchestrated via Go microservices leveraging yt-dlp and FFmpeg worker pools.',
       fullSpecsLink: 'Read full specifications on the API Documentation page.',
+      teamTag: 'Core Team',
+      teamTitle: 'Meet the Founders',
+      zidanRole: 'Lead · Co-Founder · Engineer',
+      dhevanzaRole: 'Collaborator · UI & Integration',
       contribTag: 'Open Source',
       contribTitle: 'Contribute to Hub',
       contribText: 'Hub is free software distributed under the permissive MIT License. Contributions for new platform extractors, UI optimizations, and bug reports are warmly welcomed by the community.',
@@ -107,6 +133,13 @@ export const translations = {
       envText: 'All requests must use HTTPS and send standard JSON payloads with Content-Type: application/json.',
       terminalTag: 'Interactive Terminal & Runner',
       terminalTitle: 'Public API Console',
+      terminalPlaceholder: 'type command (e.g. curl ..., help, ping, clear) and press Enter',
+      terminalRun: 'Run ⏎',
+      terminalExecuting: 'Executing...',
+      terminalCopy: 'pbcopy',
+      terminalCopied: 'copied!',
+      terminalClear: 'clear',
+      terminalWelcome: 'Hub CLI Terminal [v1.0.0-release (darwin-arm64)]\nType any command below (e.g., curl, help, ls, ping, clear) or press Enter to run.',
       endpoint1Tag: 'Endpoint: Metadata Inspection',
       endpoint1Desc: 'Inspects a target media URL, automatically identifies the service provider (YouTube, TikTok, Instagram, Facebook, X, or general Webpage), and extracts available audio/video codecs, resolutions, and author details.',
       endpoint2Tag: 'Endpoint: Stream Extraction',
@@ -168,6 +201,8 @@ export const translations = {
       reportIssue: 'Report an Issue',
       copyright: '(c) 2026 Hub. Open source software under the MIT License.',
       zeroTelemetry: 'Zero Telemetry / No Deceptive Ads',
+      partOf: 'Part of: ',
+      engineeredBy: 'Engineered by ',
     },
   },
 
@@ -180,6 +215,9 @@ export const translations = {
       openSource: 'Open Source',
       themeLight: 'Terang',
       themeDark: 'Gelap',
+      closeMenu: 'Tutup menu',
+      openMenu: 'Buka menu',
+      switchLang: 'Ganti bahasa',
     },
 
     // Halaman Beranda
@@ -191,6 +229,10 @@ export const translations = {
       analyzing: 'Menghubungkan ke resolver metadata media dan memeriksa sumber stream...',
       errorValidUrl: 'Harap masukkan URL yang valid dengan domain yang dapat dikenali.',
       errorParse: 'Gagal mengurai metadata media dari URL yang diberikan.',
+      samplesTag: 'Sumber Media Terverifikasi',
+      samplesTitle: 'Contoh Ekstraksi Media',
+      samplesDesc: 'Klik salah satu sampel untuk menguji resolusi metadata dan inspeksi stream video secara langsung.',
+      inspectStream: 'Inspeksi Stream',
       suitesHeadingTag: 'Arsitektur Modular',
       suitesHeadingTitle: 'Titik Masuk Aplikasi Khusus',
       suite1Tag: 'SUITE 01 / UTAMA',
@@ -237,6 +279,21 @@ export const translations = {
       clickToDownload: 'Klik di sini jika unduhan tidak mulai otomatis',
       downloadFailed: 'Gagal memproses unduhan. Silakan coba lagi.',
       fileSize: 'Ukuran File:',
+      targetLabel: 'Target: Stream Terdistribusi',
+      watchPreview: 'Tonton Pratinjau',
+      showThumbnail: 'Tampilkan Thumbnail',
+      playPreview: 'Tonton pratinjau sampel video',
+      formatVideo: 'Video (MP4)',
+      formatAudio: 'Audio (MP3)',
+      formatHtml: 'Sumber Laman Web (HTML)',
+      qualityOriginal: 'Sumber Asli',
+      quality1080p: '1080p Full HD',
+      quality720p: '720p HD',
+      quality480p: '480p Standar',
+      quality320k: '320 kbps Kualitas Tinggi',
+      quality128k: '128 kbps Standar',
+      qualityRawHtml: 'Markup HTML Mentah',
+      qualityCleanHtml: 'DOM Artikel Bersih',
     },
 
     // Halaman Tentang Kami
@@ -258,6 +315,10 @@ export const translations = {
       archDescTitle: 'Pipeline Transcoding Terdistribusi',
       archDescText: 'Platform Hub memisahkan antarmuka klien statis dari pemrosesan backend. Demuxing audio/video dan konversi format diatur melalui microservice Go yang memanfaatkan worker pool yt-dlp dan FFmpeg.',
       fullSpecsLink: 'Baca spesifikasi lengkap di halaman Dokumentasi API.',
+      teamTag: 'Tim Inti',
+      teamTitle: 'Kenali Para Pendiri',
+      zidanRole: 'Ketua · Co-Founder · Rekayasa',
+      dhevanzaRole: 'Kolaborator · Antarmuka & Integrasi',
       contribTag: 'Open Source',
       contribTitle: 'Kontribusi ke Hub',
       contribText: 'Hub adalah perangkat lunak gratis yang didistribusikan di bawah Lisensi MIT. Kontribusi untuk ekstraktor platform baru, optimasi antarmuka, dan pelaporan bug sangat disambut.',
@@ -275,6 +336,13 @@ export const translations = {
       envText: 'Semua permintaan harus menggunakan HTTPS dan mengirimkan payload JSON standar dengan Content-Type: application/json.',
       terminalTag: 'Terminal & Runner Interaktif',
       terminalTitle: 'Konsol API Publik',
+      terminalPlaceholder: 'ketik perintah (mis. curl ..., help, ping, clear) lalu tekan Enter',
+      terminalRun: 'Jalankan ⏎',
+      terminalExecuting: 'Mengeksekusi...',
+      terminalCopy: 'salin',
+      terminalCopied: 'tersalin!',
+      terminalClear: 'bersihkan',
+      terminalWelcome: 'Hub CLI Terminal [v1.0.0-release (darwin-arm64)]\nKetik perintah di bawah ini (mis. curl, help, ls, ping, clear) atau tekan Enter untuk menjalankan.',
       endpoint1Tag: 'Endpoint: Inspeksi Metadata',
       endpoint1Desc: 'Memeriksa URL media target, secara otomatis mengidentifikasi penyedia layanan (YouTube, TikTok, Instagram, Facebook, X, atau Webpage), dan mengekstrak codec audio/video, resolusi, serta detail kreator yang tersedia.',
       endpoint2Tag: 'Endpoint: Ekstraksi Stream',
@@ -336,6 +404,8 @@ export const translations = {
       reportIssue: 'Laporkan Masalah',
       copyright: '(c) 2026 Hub. Perangkat lunak open source berlisensi MIT.',
       zeroTelemetry: 'Nol Telemetri / Tanpa Iklan Menyesatkan',
+      partOf: 'Bagian dari: ',
+      engineeredBy: 'Dikembangkan oleh ',
     },
   },
 };
@@ -350,18 +420,54 @@ export function getInitialLanguage(): Language {
   return 'en';
 }
 
-export function useLanguage() {
-  const [lang, setLang] = useState<Language>(getInitialLanguage);
+let currentLang: Language = getInitialLanguage();
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    localStorage.setItem('hub-lang', lang);
-  }, [lang]);
-
-  const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'id' : 'en'));
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => {
+    listeners.delete(callback);
   };
+}
 
+function getSnapshot(): Language {
+  return currentLang;
+}
+
+export function setLanguage(newLang: Language) {
+  if (currentLang !== newLang) {
+    currentLang = newLang;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hub-lang', newLang);
+      document.documentElement.setAttribute('lang', newLang);
+      window.dispatchEvent(new CustomEvent('hub-lang-change', { detail: newLang }));
+    }
+    listeners.forEach((listener) => listener());
+  }
+}
+
+export function toggleLanguage() {
+  setLanguage(currentLang === 'en' ? 'id' : 'en');
+}
+
+// Sync across browser tabs or external events
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'hub-lang' && (e.newValue === 'en' || e.newValue === 'id')) {
+      if (e.newValue !== currentLang) {
+        currentLang = e.newValue;
+        document.documentElement.setAttribute('lang', currentLang);
+        listeners.forEach((listener) => listener());
+      }
+    }
+  });
+
+  document.documentElement.setAttribute('lang', currentLang);
+}
+
+export function useLanguage() {
+  const lang = useSyncExternalStore<Language>(subscribe, getSnapshot, () => 'en');
   const t = translations[lang];
 
-  return { lang, toggleLanguage, setLang, t };
+  return { lang, toggleLanguage, setLang: setLanguage, t };
 }

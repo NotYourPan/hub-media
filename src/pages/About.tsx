@@ -94,10 +94,10 @@ Go Ingestion Engine (Gin / Fiber)
           <section className="section-block">
             <div className="section-header">
               <div className="section-tag">
-                {t.about.contribTag === 'Open Source' ? 'Core Team' : 'Tim Inti'}
+                {t.about.teamTag}
               </div>
               <h2 className="section-title">
-                {t.about.contribTag === 'Open Source' ? 'Meet the Founders' : 'Kenali Para Pendiri'}
+                {t.about.teamTitle}
               </h2>
             </div>
 
@@ -129,7 +129,7 @@ Go Ingestion Engine (Gin / Fiber)
                   Zidan Mutaqin
                 </h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
-                  Lead · Co-Founder · Engineer
+                  {t.about.zidanRole}
                 </p>
                 <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
                   @zidanmutaqin
@@ -161,7 +161,7 @@ Go Ingestion Engine (Gin / Fiber)
                   Dhevanza Yugies Daniella
                 </h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
-                  Collaborator · UI &amp; Integration
+                  {t.about.dhevanzaRole}
                 </p>
                 <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
                   @dhevanza

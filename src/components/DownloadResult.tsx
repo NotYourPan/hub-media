@@ -100,11 +100,11 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
   const getFormatLabel = (format: MediaFormat) => {
     switch (format) {
       case 'video':
-        return 'Video (MP4)';
+        return t.downloader.formatVideo;
       case 'audio':
-        return 'Audio (MP3)';
+        return t.downloader.formatAudio;
       case 'html':
-        return 'Webpage Source (HTML)';
+        return t.downloader.formatHtml;
       default:
         return format;
     }
@@ -113,21 +113,21 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
   const getQualityLabel = (quality: MediaQuality) => {
     switch (quality) {
       case 'original':
-        return 'Original Source';
+        return t.downloader.qualityOriginal;
       case '1080p':
-        return '1080p Full HD';
+        return t.downloader.quality1080p;
       case '720p':
-        return '720p HD';
+        return t.downloader.quality720p;
       case '480p':
-        return '480p Standard';
+        return t.downloader.quality480p;
       case '320kbps':
-        return '320 kbps High Quality';
+        return t.downloader.quality320k;
       case '128kbps':
-        return '128 kbps Standard';
+        return t.downloader.quality128k;
       case 'raw_html':
-        return 'Raw HTML Markup';
+        return t.downloader.qualityRawHtml;
       case 'clean_html':
-        return 'Sanitized Article DOM';
+        return t.downloader.qualityCleanHtml;
       default:
         return quality;
     }
@@ -205,7 +205,7 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
                 textAlign: 'center',
               }}
             >
-              {isPlayingPreview ? 'Show Thumbnail' : 'Watch Stream Preview'}
+              {isPlayingPreview ? t.downloader.showThumbnail : t.downloader.watchPreview}
             </button>
           )}
         </div>
@@ -248,7 +248,7 @@ export const DownloadResult: React.FC<DownloadResultProps> = ({ media }) => {
 
           <div className="result-meta-row">
             <span>{t.downloader.identifier} {media.id}</span>
-            <span>Target: Distributed Stream</span>
+            <span>{t.downloader.targetLabel}</span>
           </div>
         </div>
       </div>

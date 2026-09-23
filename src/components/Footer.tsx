@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
               {t.footer.bio}
             </p>
             <div style={{ marginTop: '0.75rem', fontSize: '0.82rem' }}>
-              <span style={{ color: 'var(--color-text-dim)' }}>Part of: </span>
+              <span style={{ color: 'var(--color-text-dim)' }}>{t.footer.partOf}</span>
               <a
                 href="https://zidanmutaqin.cloud"
                 target="_blank"
@@ -124,7 +124,7 @@ export const Footer: React.FC = () => {
             <span>{t.footer.copyright}</span>
             <span style={{ margin: '0 0.5rem', opacity: 0.4 }}>|</span>
             <span>
-              Engineered by{' '}
+              {t.footer.engineeredBy}
               <a
                 href="https://zidanmutaqin.cloud"
                 target="_blank"

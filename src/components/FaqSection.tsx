@@ -23,7 +23,7 @@ export const FaqSection: React.FC = () => {
       </div>
 
       <div style={{ maxWidth: '820px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {t.faq.items.map((item, index) => {
+        {t.faq.items.map((item: { q: string; a: string }, index: number) => {
           const isOpen = openIndex === index;
 
           return (

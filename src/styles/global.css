@@ -853,7 +853,217 @@ code, kbd, samp, pre {
   line-height: 1.5;
 }
 
-/* Responsive Media Queries */
+/* ============================================================
+   Hamburger & Mobile Drawer
+   ============================================================ */
+
+/* Hide hamburger on desktop */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-elevated);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.hamburger-btn:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-active);
+}
+
+.hamburger-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: var(--color-text-secondary);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease, width 0.2s ease;
+  transform-origin: center;
+}
+
+/* Animate to X when open */
+.hamburger-btn.is-open .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-btn.is-open .hamburger-bar:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+.hamburger-btn.is-open .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================================
+   Fullscreen Mobile Menu
+   ============================================================ */
+
+/* Fullscreen overlay */
+.mobile-fullscreen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: var(--color-bg);
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mobile-fullscreen.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Top bar inside fullscreen overlay */
+.mobile-fs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--color-border-subtle);
+  flex-shrink: 0;
+}
+
+/* Close button (top-left) */
+.mobile-fs-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.mobile-fs-close:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+/* Brand in center of topbar */
+.mobile-fs-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Nav content area */
+.mobile-fs-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+/* Nav links list */
+.mobile-fs-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2.5rem;
+}
+
+/* Each big nav link */
+.mobile-fs-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  line-height: 1.2;
+}
+
+.mobile-fs-link:hover {
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.mobile-fs-link.active {
+  color: var(--color-text);
+}
+
+/* Stagger animation for links */
+.mobile-fullscreen.is-open .mobile-fs-links li:nth-child(1) .mobile-fs-link {
+  animation: fs-link-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.mobile-fullscreen.is-open .mobile-fs-links li:nth-child(2) .mobile-fs-link {
+  animation: fs-link-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+.mobile-fullscreen.is-open .mobile-fs-links li:nth-child(3) .mobile-fs-link {
+  animation: fs-link-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.19s both;
+}
+
+@keyframes fs-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Secondary links (GitHub, etc.) */
+.mobile-fs-secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.mobile-fs-secondary-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.mobile-fs-secondary-link:hover {
+  color: var(--color-primary);
+}
+
+
+/* ============================================================
+   Responsive Media Queries
+   ============================================================ */
+
 @media (max-width: 1024px) {
   .hero-title {
     font-size: 2.25rem;
@@ -866,7 +1076,8 @@ code, kbd, samp, pre {
   }
 }
 
-@media (max-width: 768px) {
+/* Tablet & mobile: show hamburger, hide desktop nav */
+@media (max-width: 767px) {
   :root {
     --header-height: 58px;
     --space-xl: 1rem;
@@ -875,12 +1086,38 @@ code, kbd, samp, pre {
     --space-4xl: 2.5rem;
   }
 
-  .site-navbar-inner {
-    flex-wrap: wrap;
+  /* Show hamburger */
+  .hamburger-btn {
+    display: flex;
+  }
+
+  /* Show fullscreen overlay (display controlled by .is-open state) */
+  .mobile-fullscreen {
+    display: flex;
+  }
+
+  /* Hide desktop nav */
+  .nav-desktop {
+    display: none;
+  }
+
+  /* Hide GitHub button from navbar (it's in drawer) */
+  .nav-github-btn {
+    display: none;
+  }
+
+  /* Hide text label on theme/lang buttons to save space */
+  .nav-btn-label {
+    display: none;
   }
 
   .brand-badge {
     display: none;
+  }
+
+  /* Prevent icon-only buttons from being too wide */
+  .nav-control-btn {
+    padding: 6px 9px;
   }
 
   .hero-title {
@@ -947,6 +1184,16 @@ code, kbd, samp, pre {
   .nav-link {
     padding: 4px 8px;
     font-size: 0.8rem;
+  }
+}
+
+/* Touch target safety — minimum 44px on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .nav-control-btn,
+  .hamburger-btn,
+  .mobile-nav-link,
+  .mobile-github-btn {
+    min-height: 44px;
   }
 }
 
