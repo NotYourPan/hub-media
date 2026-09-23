@@ -102,7 +102,7 @@ Go Ingestion Engine (Gin / Fiber)
             </div>
 
             {/* 2-column grid: Zidan kiri, Dhevanza kanan */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+            <div className="founders-grid">
 
               {/* Zidan Mutaqin — Lead */}
               <SpotlightCard
