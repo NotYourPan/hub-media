@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+
 	"hub-server/internal/extractor"
 	"hub-server/internal/models"
 	"hub-server/internal/queue"
@@ -26,11 +27,27 @@ func NewServer(ext extractor.Extractor, pool *queue.WorkerPool, baseURL string) 
 	}
 }
 
+func (s *Server) getBaseURL(r *http.Request) string {
+	proto := "https"
+	if r.TLS == nil && r.Header.Get("X-Forwarded-Proto") != "https" && strings.HasPrefix(s.baseURL, "http://") && strings.Contains(s.baseURL, "localhost") {
+		proto = "http"
+	}
+	host := r.Host
+	if xfHost := r.Header.Get("X-Forwarded-Host"); xfHost != "" {
+		host = xfHost
+	}
+	if host != "" {
+		return fmt.Sprintf("%s://%s", proto, host)
+	}
+	if s.baseURL != "" && !strings.Contains(s.baseURL, "localhost") {
+		return s.baseURL
+	}
+	return "https://api.zidanmutaqin.cloud"
+}
+
 func (s *Server) HandleHealth(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]any{
-		"status":  "ok",
-		"version": "go1.22",
-		"service": "Hub Media Ingestion Engine",
+	writeJSON(w, http.StatusOK, map[string]string{
+		"status": "ok",
 	})
 }
 
@@ -43,13 +60,13 @@ func (s *Server) HandleMediaInfo(w http.ResponseWriter, r *http.Request) {
 
 	var req models.InfoRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || strings.TrimSpace(req.URL) == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid JSON payload or missing 'url' field"})
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request payload"})
 		return
 	}
 
 	info, err := s.extractor.Inspect(r.Context(), req.URL)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeJSON(w, http.StatusUnprocessableEntity, map[string]string{"error": "Unable to process media stream from the provided URL"})
 		return
 	}
 
@@ -82,7 +99,6 @@ func (s *Server) HandleMediaDownload(w http.ResponseWriter, r *http.Request) {
 		JobID:            job.ID,
 		Status:           job.Status,
 		EstimatedSeconds: 2.5,
-		Engine:           "Go 1.22 + yt-dlp Transcoder Pool",
 	})
 }
 
@@ -100,15 +116,20 @@ func (s *Server) HandleJobStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	errStr := ""
+	if job.Status == models.StatusFailed {
+		errStr = "Failed to process media stream"
+	}
+
 	resp := models.JobStatusResponse{
 		JobID:           job.ID,
 		Status:          job.Status,
 		ProgressPercent: job.Progress,
-		Error:           job.Error,
+		Error:           errStr,
 	}
 
 	if job.Status == models.StatusReady {
-		resp.DownloadURL = fmt.Sprintf("%s/v1/media/stream/%s", s.baseURL, job.ID)
+		resp.DownloadURL = fmt.Sprintf("%s/v1/media/stream/%s", s.getBaseURL(r), job.ID)
 		resp.FileSizeBytes = job.FileSize
 		resp.ExpiresInSeconds = 3600
 	}

@@ -78,7 +78,6 @@ type DownloadResponse struct {
 	JobID            string    `json:"jobId"`
 	Status           JobStatus `json:"status"`
 	EstimatedSeconds float64   `json:"estimatedSeconds"`
-	Engine           string    `json:"engine"`
 }
 
 // JobStatusResponse is returned when polling job progress

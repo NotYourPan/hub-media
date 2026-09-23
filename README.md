@@ -1,46 +1,53 @@
-# Hub
+<p align="center">
+  <img src="public/assets/logo-wide.webp" alt="Hub Media Downloader Logo" width="560" />
+</p>
 
-A modern, developer-first, open-source media ingestion and format extraction platform built with React, Vite Multi-Page Architecture, and strict TypeScript.
+<h1 align="center">Hub : Universal Media Downloader</h1>
 
-- Production Domain: https://hub.zidanmutaqin.cloud
-- Architecture: Zero-Bloat Lightweight Static Client (3 Independent HTML Entrypoints)
-- Public API Base: https://api.zidanmutaqin.cloud/v1/media
-- Planned Processing Engine: Go Backend + yt-dlp + FFmpeg
-- License: MIT
+<p align="center">
+  A high-performance, developer-first, open-source media ingestion and distributed transcoding platform.
+</p>
+
+<p align="center">
+  <a href="https://golang.org"><img src="https://img.shields.io/badge/Go-1.22+-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go Version" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.7" /></a>
+  <a href="https://vitejs.dev"><img src="https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 6" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT" /></a>
+  <img src="https://img.shields.io/badge/Subject-Web%20Programming-7132F5?style=for-the-badge" alt="Web Programming" />
+</p>
+
+> [!IMPORTANT]
+> **Academic Project Disclaimer**:
+> This project is created solely for the **Web Programming (*Pemrograman Web*)** university coursework. It is engineered for educational, demonstration, and research purposes in modern full-stack web architecture, distributed media streaming pipelines, and clean code practices.
+
+### Technologies Overview
+
+| Component | Technologies Used | Purpose |
+| :--- | :--- | :--- |
+| **Frontend Web App** | React 19, TypeScript, Vite 6, Vanilla CSS | Multi-page client interface, stream preview, format selection |
+| **Backend REST API** | Go 1.22 Standard Library | Asynchronous media routing, worker pool, and job status queue |
+| **Media Engine** | Go 1.22, yt-dlp, FFmpeg | Stream extraction, format parsing, and audio/video demuxing |
+| **Public Endpoint** | [hub.zidanmutaqin.cloud](https://hub.zidanmutaqin.cloud) | Production web application interface |
 
 ---
 
-## Overview
+## Full Tech Stack
 
-Hub is a lightweight, privacy-conscious media analysis and extraction platform. Designed as a zero-dependency static Multi-Page Application, Hub provides three dedicated, high-speed interfaces for parsing media URLs across major platforms (YouTube, TikTok, Instagram, Facebook, X), exploring system architecture, and connecting to the public REST API.
+### Frontend
+- **Framework**: React 19
+- **Tooling**: Vite 6 (Multi-Page Application Rollup configuration)
+- **Language**: TypeScript 5.7 (Strict mode)
+- **Styling**: Vanilla CSS3 with custom design tokens, dark and light modes, and glassmorphic UI
+- **Internationalization**: Custom reactive i18n hook supporting English and Indonesian
+- **Animations**: Lenis smooth scrolling and CSS micro-interactions
 
----
-
-## Key Features
-
-- Kraken-Inspired Design System: Distinctive purple brand identity (`#7132f5`, `#5741d8`), near-black text, cool blue-gray neutral scale, strictly 12px button radius (no pill buttons), and subtle elevation shadows (`rgba(0,0,0,0.03) 0px 4px 24px`).
-- Dark & Light Mode: Fully reactive theme switcher with local storage persistence and system preference auto-detection.
-- Bilingual i18n Support: Full internationalization supporting English (`en`) and Indonesian (`id`) with reactive language toggle.
-- Interactive FAQ Accordion: Accessible knowledge base answering architectural, format, privacy, and API questions.
-- Real Media Assets & Stream Preview: High-resolution media cards with live stream video playback preview.
-- Lightweight Multi-Page Architecture (MPA): Features three independent physical HTML entry points (`index.html`, `about.html`, `docs.html`), completely eliminating client-side routing overhead and ensuring instant time-to-interactive.
-- Multi-Platform Ingestion: Ingestion support for YouTube, TikTok, Instagram, Facebook, X (Twitter), and general Webpage content extraction.
-- Instant Host Detection: Real-time hostname parsing and brand badge identification as links are typed or pasted.
-- Format and Quality Selection: Inspect stream variants across Video (MP4), Audio (MP3 stems), and Webpage DOM snapshots.
-- Public REST API Documentation: Comprehensive developer guide with interactive macOS Terminal playground for integrating Hub into bots, scripts, and third-party apps via public API endpoints.
-- Pure CSS Design Tokens: Built with native CSS variables and semantic HTML5 without heavy UI frameworks (no Tailwind, no Bootstrap).
-- Serverless-Ready Clean URLs: Native routing configured through `public/_redirects` (`/about`, `/docs`).
-
----
-
-## Tech Stack
-
-- Frontend: React 19
-- Build Tooling: Vite 6 (Multi-Page Rollup configuration)
-- Language: TypeScript 5.7 (Strict mode)
-- Styling: Vanilla CSS3 with centralized design tokens (`src/styles/global.css`)
-- Animations: Lenis Smooth Scroll, Reactbits DecryptedText & SpotlightCard, Web3 Particle Canvas
-- Hosting Target: Netlify Static Delivery
+### Backend
+- **Language**: Go 1.22
+- **Architecture**: Modular RESTful microservice with Go channel worker pool
+- **Media Extractors**: Specialized engines for TikTok, YouTube, Instagram, Facebook, and Twitter/X
+- **Transcoder**: FFmpeg for audio stem extraction and high-resolution video packaging
+- **Security**: Ephemeral streaming lifecycle with zero logging of downloaded content
 
 ---
 
@@ -51,7 +58,7 @@ Hub is split into three standalone HTML entry points:
 ### 1. Media Downloader (`index.html`)
 - Route: `/`
 - Entry: `src/main.tsx` -> `src/pages/Home.tsx`
-- Purpose: Primary landing interface providing cross-platform URL analysis, quick stream inspection, format selection, and stream simulation.
+- Purpose: Primary landing interface providing cross-platform URL analysis, quick stream inspection, format selection, and high-speed binary download delivery.
 
 ### 2. About Us & Architecture (`about.html`)
 - Route: `/about` or `/about.html`
@@ -215,7 +222,11 @@ The output directory `dist/` will contain:
 - Bundled CSS and JavaScript assets
 
 ---
+## Contributors and Team
+- **[Zidan Mutaqin](https://github.com/zidanaetrna)**: Lead Engineer and Maintainer ([zidanmutaqin.cloud](https://zidanmutaqin.cloud))
+- **[notyourpan](https://github.com/notyourpan)**: Contributor
 
+---
 ## License
 
 Distributed under the [MIT License](LICENSE).

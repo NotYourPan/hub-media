@@ -94,73 +94,83 @@ Go Ingestion Engine (Gin / Fiber)
           <section className="section-block">
             <div className="section-header">
               <div className="section-tag">
-                {t.about.contribTag === 'Open Source' ? 'Core Contributors' : 'Kontributor Utama'}
+                {t.about.teamTag}
               </div>
               <h2 className="section-title">
-                {t.about.contribTag === 'Open Source' ? 'Engineering & Maintainers' : 'Tim Rekayasa & Pengelola'}
+                {t.about.teamTitle}
               </h2>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
-              {[
-                {
-                  name: 'Alex Chen',
-                  role: 'Distributed Systems & Go Engine',
-                  avatar: '/assets/avatars/alex-chen.webp',
-                  handle: '@alexchen',
-                },
-                {
-                  name: 'Sarah Jenkins',
-                  role: 'Client Architecture & UI/UX',
-                  avatar: '/assets/avatars/sarah-jenkins.webp',
-                  handle: '@sarahj',
-                },
-                {
-                  name: 'Marcus Vance',
-                  role: 'Audio Stream Demuxing & Codecs',
-                  avatar: '/assets/avatars/marcus-vance.webp',
-                  handle: '@marcusv',
-                },
-                {
-                  name: 'Elena Rostova',
-                  role: 'API Gateway & Protocol Security',
-                  avatar: '/assets/avatars/elena-rostova.webp',
-                  handle: '@elenar',
-                },
-              ].map((member, i) => (
-                <SpotlightCard
-                  key={i}
-                  className="card-item"
-                  spotlightColor="rgba(113, 50, 245, 0.16)"
-                  style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}
-                >
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    style={{
-                      width: '68px',
-                      height: '68px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '2px solid var(--color-primary)',
-                      marginBottom: '14px',
-                      boxShadow: 'var(--shadow-elevation)',
-                    }}
-                    loading="lazy"
-                  />
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-text)', marginBottom: '4px' }}>
-                    {member.name}
-                  </h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
-                    {member.role}
-                  </p>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
-                    {member.handle}
-                  </span>
-                </SpotlightCard>
-              ))}
+            {/* 2-column grid: Zidan kiri, Dhevanza kanan */}
+            <div className="founders-grid">
+
+              {/* Zidan Mutaqin — Lead */}
+              <SpotlightCard
+                className="card-item"
+                spotlightColor="rgba(113, 50, 245, 0.16)"
+                style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}
+              >
+                <img
+                  src="/assets/avatars/zidan-mutaqin.webp"
+                  alt="Zidan Mutaqin"
+                  style={{
+                    width: '68px',
+                    height: '68px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    objectPosition: 'top',
+                    border: '2px solid var(--color-primary)',
+                    marginBottom: '14px',
+                    boxShadow: 'var(--shadow-elevation)',
+                  }}
+                  loading="lazy"
+                />
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-text)', marginBottom: '4px' }}>
+                  Zidan Mutaqin
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
+                  {t.about.zidanRole}
+                </p>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  @zidanmutaqin
+                </span>
+              </SpotlightCard>
+
+              {/* Dhevanza Yugies Daniella — Collaborator */}
+              <SpotlightCard
+                className="card-item"
+                spotlightColor="rgba(113, 50, 245, 0.16)"
+                style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px' }}
+              >
+                <img
+                  src="/assets/avatars/dhevanza-yugies.webp"
+                  alt="Dhevanza Yugies Daniella"
+                  style={{
+                    width: '68px',
+                    height: '68px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    objectPosition: 'top',
+                    border: '2px solid var(--color-primary)',
+                    marginBottom: '14px',
+                    boxShadow: 'var(--shadow-elevation)',
+                  }}
+                  loading="lazy"
+                />
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-text)', marginBottom: '4px' }}>
+                  Dhevanza Yugies Daniella
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontFamily: 'var(--font-mono)', marginBottom: '10px' }}>
+                  {t.about.dhevanzaRole}
+                </p>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  @dhevanza
+                </span>
+              </SpotlightCard>
+
             </div>
           </section>
+
 
           <section className="section-block">
             <div className="section-header">

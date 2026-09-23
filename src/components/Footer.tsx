@@ -10,12 +10,29 @@ export const Footer: React.FC = () => {
         <div className="footer-grid">
           <div>
             <div className="brand-logo" style={{ marginBottom: '0.75rem' }}>
-              <span className="brand-icon">H</span>
+              <img
+                src="/assets/logo.webp"
+                alt="Hub Logo"
+                className="brand-icon-img"
+                width="28"
+                height="28"
+              />
               <span>Hub</span>
             </div>
             <p style={{ fontSize: '0.88rem', maxWidth: '340px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
               {t.footer.bio}
             </p>
+            <div style={{ marginTop: '0.75rem', fontSize: '0.82rem' }}>
+              <span style={{ color: 'var(--color-text-dim)' }}>{t.footer.partOf}</span>
+              <a
+                href="https://zidanmutaqin.cloud"
+                target="_blank"
+                rel="author me noopener noreferrer"
+                style={{ color: '#06b6d4', textDecoration: 'none', fontWeight: 600 }}
+              >
+                zidanmutaqin.cloud ↗
+              </a>
+            </div>
           </div>
 
           <div>
@@ -103,7 +120,21 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="footer-bottom">
-          <span>{t.footer.copyright}</span>
+          <div>
+            <span>{t.footer.copyright}</span>
+            <span style={{ margin: '0 0.5rem', opacity: 0.4 }}>|</span>
+            <span>
+              {t.footer.engineeredBy}
+              <a
+                href="https://zidanmutaqin.cloud"
+                target="_blank"
+                rel="author me noopener noreferrer"
+                style={{ color: '#a78bfa', textDecoration: 'none', fontWeight: 600 }}
+              >
+                Zidan Mutaqin
+              </a>
+            </span>
+          </div>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>
             {t.footer.zeroTelemetry}
           </span>

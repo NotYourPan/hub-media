@@ -27,7 +27,7 @@ interface SampleMediaAsset {
 }
 
 export const Home: React.FC = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const [status, setStatus] = useState<DownloadStatus>('idle');
   const [mediaInfo, setMediaInfo] = useState<MediaInfo | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -183,20 +183,18 @@ export const Home: React.FC = () => {
             <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <div className="section-tag">
-                  {lang === 'en' ? 'Verified Media Sources' : 'Sumber Media Terverifikasi'}
+                  {t.home.samplesTag}
                 </div>
                 <h2 className="section-title">
-                  {lang === 'en' ? 'Sample Media Extraction' : 'Contoh Ekstraksi Media'}
+                  {t.home.samplesTitle}
                 </h2>
               </div>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', maxWidth: '360px' }}>
-                {lang === 'en'
-                  ? 'Click any sample to test real-time metadata resolution and video stream inspection.'
-                  : 'Klik salah satu sampel untuk menguji resolusi metadata dan inspeksi stream video secara langsung.'}
+                {t.home.samplesDesc}
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))', gap: '1.25rem' }}>
               {sampleAssets.map((asset, idx) => (
                 <SpotlightCard
                   key={idx}
@@ -272,7 +270,7 @@ export const Home: React.FC = () => {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="5 3 19 12 5 21 5 3" />
                     </svg>
-                    <span>{lang === 'en' ? 'Inspect Stream' : 'Inspeksi Stream'}</span>
+                    <span>{t.home.inspectStream}</span>
                   </button>
                 </SpotlightCard>
               ))}
